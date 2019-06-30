@@ -1,19 +1,20 @@
-import React from 'react';
-import './RestaurantMap.css'
-import RestaurantsProps from '../../shared/props/restaurantsProps';
+import React from "react";
+import "./RestaurantMap.css";
+import RestaurantsProps from "../../shared/props/RestaurantsProps";
+import RestaurantMarker from "../restaurant-marker/RestaurantMarker";
 
 const RestaurantMap: React.FC<RestaurantsProps> = ({ restaurants }) => {
-  const restaurantList = restaurants.map(restaurant => (
-    <li>{restaurant.id}</li>
+  const markerList = restaurants.map(restaurant => (
+    <RestaurantMarker restaurant={restaurant} />
   ));
   return (
     <div className="RestaurantMap">
       <div className="map-container">
-          Map placeholder
-          <ul>{restaurantList}</ul>
+        Map placeholder
+        {markerList}
       </div>
     </div>
   );
-}
+};
 
 export default RestaurantMap;

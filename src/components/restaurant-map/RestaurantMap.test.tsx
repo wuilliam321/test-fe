@@ -1,7 +1,7 @@
 import { shallow, ShallowWrapper } from "enzyme";
 import React from "react";
 import RestaurantMap from "./RestaurantMap";
-import RestaurantsProps from "../../shared/props/restaurantsProps";
+import RestaurantsProps from "../../shared/props/RestaurantsProps";
 
 describe("RestaurantMap", () => {
   let wrapper: ShallowWrapper;

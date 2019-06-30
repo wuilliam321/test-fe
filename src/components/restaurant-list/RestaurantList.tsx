@@ -1,15 +1,16 @@
 import React from "react";
 import "./RestaurantList.css";
-import RestaurantsProps from "../../shared/props/restaurantsProps";
+import RestaurantsProps from "../../shared/props/RestaurantsProps";
+import RestaurantItem from "../restaurant-item/RestaurantItem";
 
 const RestaurantList: React.FC<RestaurantsProps> = ({ restaurants }) => {
   const restaurantList = restaurants.map(restaurant => (
-    <li>{restaurant.id}</li>
+    <RestaurantItem restaurant={restaurant} />
   ));
   return (
     <div className="RestaurantList">
       <h1>Restaurants</h1>
-      <ul>{restaurantList}</ul>
+      {restaurantList}
     </div>
   );
 };
