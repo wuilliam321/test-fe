@@ -5,7 +5,7 @@ import RestaurantItem from "../restaurant-item/RestaurantItem";
 
 const RestaurantList: React.FC<RestaurantsProps> = ({ restaurants }) => {
   const restaurantList = restaurants.map(restaurant => (
-    <RestaurantItem restaurant={restaurant} />
+    <RestaurantItem key={restaurant.id} restaurant={restaurant} />
   ));
   return (
     <div className="RestaurantList">

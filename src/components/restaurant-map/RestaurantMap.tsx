@@ -5,7 +5,7 @@ import RestaurantMarker from "../restaurant-marker/RestaurantMarker";
 
 const RestaurantMap: React.FC<RestaurantsProps> = ({ restaurants }) => {
   const markerList = restaurants.map(restaurant => (
-    <RestaurantMarker restaurant={restaurant} />
+    <RestaurantMarker key={restaurant.id} restaurant={restaurant} />
   ));
   return (
     <div className="RestaurantMap">
