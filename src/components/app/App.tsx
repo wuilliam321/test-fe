@@ -1,23 +1,14 @@
 import React, { useState } from "react";
-import "./App.css";
-import RestaurantMap from "../restaurant-map/RestaurantMap";
-import RestaurantList from "../restaurant-list/RestaurantList";
-import RestaurantsProps from "../../shared/props/RestaurantsProps";
 import Restaurant from "../../shared/interfaces/restaurants";
+import RestaurantsProps from "../../shared/props/RestaurantsProps";
+import { debug } from "../../shared/utils";
+import RestaurantList from "../restaurant-list/RestaurantList";
+import RestaurantMap from "../restaurant-map/RestaurantMap";
+import "./App.css";
 
 const App: React.FC = () => {
-  const initialState: Restaurant[] = [
-    {
-      id: 1,
-      logo: "Logo url",
-      ratingScore: "1",
-      deliveryTimeMaxMinutes: "45",
-      link: "http://something",
-      name: "Restaurant One",
-      coordinates: "-30",
-      topCategories: "56"
-    }
-  ];
+  debug("Rendering App Component");
+  const initialState: Restaurant[] = [];
   const [restaurants, setRestaurants] = useState(initialState);
 
   const restaurantsProps: RestaurantsProps = {

@@ -1,9 +1,11 @@
 import React from "react";
-import "./RestaurantMap.css";
 import RestaurantsProps from "../../shared/props/RestaurantsProps";
+import { debug } from "../../shared/utils";
 import RestaurantMarker from "../restaurant-marker/RestaurantMarker";
+import "./RestaurantMap.css";
 
 const RestaurantMap: React.FC<RestaurantsProps> = ({ restaurants }) => {
+  debug("Rendering RestaurantMap Component");
   const markerList = restaurants.map(restaurant => (
     <RestaurantMarker key={restaurant.id} restaurant={restaurant} />
   ));
