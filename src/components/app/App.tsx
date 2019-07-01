@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import Restaurant from "../../shared/interfaces/restaurants";
-import RestaurantsProps from "../../shared/props/RestaurantsProps";
+import Restaurant from "../../shared/interfaces/restaurant";
+import RestaurantListProps from "../../shared/props/RestaurantListProps";
+import RestaurantMapProps from "../../shared/props/RestaurantMapProps";
 import { debug } from "../../shared/utils";
 import RestaurantList from "../restaurant-list/RestaurantList";
 import RestaurantMap from "../restaurant-map/RestaurantMap";
@@ -10,17 +11,18 @@ const App: React.FC = () => {
   debug("Rendering App Component");
   const initialState: Restaurant[] = [];
   const [restaurants, setRestaurants] = useState(initialState);
-
-  const restaurantsProps: RestaurantsProps = {
-    restaurants: restaurants
+  const restaurantMapProps: RestaurantMapProps = {
+    restaurants: restaurants,
+    setRestaurants: setRestaurants
   };
+  const restaurantListProps: RestaurantListProps = { restaurants: restaurants };
 
   return (
     <div className="App">
       <header className="App-header">
         <h1>Restaurants App</h1>
-        <RestaurantMap {...restaurantsProps} />
-        <RestaurantList {...restaurantsProps} />
+        <RestaurantMap {...restaurantMapProps} />
+        <RestaurantList {...restaurantListProps} />
       </header>
     </div>
   );

@@ -2,7 +2,7 @@ import { shallow, ShallowWrapper } from "enzyme";
 import React from "react";
 import App from "./App";
 
-describe("RestaurantMap", () => {
+describe("App", () => {
   let wrapper: ShallowWrapper;
 
   beforeEach(() => (wrapper = shallow(<App />)));

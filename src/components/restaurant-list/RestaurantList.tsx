@@ -1,10 +1,10 @@
 import React from "react";
-import "./RestaurantList.css";
-import RestaurantsProps from "../../shared/props/RestaurantsProps";
-import RestaurantItem from "../restaurant-item/RestaurantItem";
+import RestaurantListProps from "../../shared/props/RestaurantListProps";
 import { debug } from "../../shared/utils";
+import RestaurantItem from "../restaurant-item/RestaurantItem";
+import "./RestaurantList.css";
 
-const RestaurantList: React.FC<RestaurantsProps> = ({ restaurants }) => {
+const RestaurantList: React.FC<RestaurantListProps> = ({ restaurants }) => {
   debug("Rendering RestaurantList Component");
   const restaurantList = restaurants.map(restaurant => (
     <RestaurantItem key={restaurant.id} restaurant={restaurant} />

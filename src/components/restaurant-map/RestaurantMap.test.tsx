@@ -1,20 +1,21 @@
-import { shallow, ShallowWrapper } from "enzyme";
+import { shallow, ShallowWrapper, mount } from "enzyme";
 import React from "react";
 import RestaurantMap from "./RestaurantMap";
-import RestaurantsProps from "../../shared/props/RestaurantsProps";
+import RestaurantMapProps from "../../shared/props/RestaurantMapProps";
 
 describe("RestaurantMap", () => {
   let wrapper: ShallowWrapper;
-  let restaurantsProps: RestaurantsProps;
+  let restaurantMapProps: RestaurantMapProps;
 
   beforeAll(() => {
-    restaurantsProps = {
-      restaurants: []
+    restaurantMapProps = {
+      restaurants: [],
+      setRestaurants: jest.fn()
     };
   });
 
   beforeEach(
-    () => (wrapper = shallow(<RestaurantMap {...restaurantsProps} />))
+    () => (wrapper = shallow(<RestaurantMap {...restaurantMapProps} />))
   );
 
   it("should render a <div />", () => {

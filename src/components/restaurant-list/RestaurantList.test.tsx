@@ -1,19 +1,21 @@
 import { shallow, ShallowWrapper } from "enzyme";
 import React from "react";
+import RestaurantListProps from "../../shared/props/RestaurantListProps";
 import RestaurantList from "./RestaurantList";
-import RestaurantsProps from "../../shared/props/RestaurantsProps";
 
 describe("RestaurantList", () => {
   let wrapper: ShallowWrapper;
-  let restaurantsProps: RestaurantsProps
+  let restaurantListProps: RestaurantListProps;
 
   beforeAll(() => {
-    restaurantsProps = {
+    restaurantListProps = {
       restaurants: []
-    }
-  })
+    };
+  });
 
-  beforeEach(() => (wrapper = shallow(<RestaurantList {...restaurantsProps} />)));
+  beforeEach(
+    () => (wrapper = shallow(<RestaurantList {...restaurantListProps} />))
+  );
 
   it("should render a <div />", () => {
     expect(wrapper.find(".RestaurantList").length).toEqual(1);
