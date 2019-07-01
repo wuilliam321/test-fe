@@ -9,7 +9,18 @@ describe("RestaurantList", () => {
 
   beforeAll(() => {
     restaurantListProps = {
-      restaurants: []
+      restaurants: [
+        {
+          id: 1,
+          logo: "1",
+          ratingScore: "1",
+          deliveryTimeMaxMinutes: "1",
+          link: "1",
+          name: "1",
+          coordinates: "1",
+          topCategories: "1"
+        }
+      ]
     };
   });
 

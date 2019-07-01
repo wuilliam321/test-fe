@@ -13,19 +13,35 @@ const RestaurantMap: React.FC<RestaurantMapProps> = ({
   setRestaurants
 }) => {
   debug("Rendering RestaurantMap Component");
+  useEffect(() => {
+    const handleStatusChange = (data: Restaurant[]) => setRestaurants(data);
+    const subscription = restaurantsService.restaurantsChanged$.subscribe(
+      handleStatusChange
+    );
+    return function cleanup() {
+      subscription.unsubscribe();
+    };
+  }, [setRestaurants]);
+
   const initialMapPoint: Coordinate = { lat: "0", lng: "0" };
   const [currentPoint, setCurrentPoint] = useState(initialMapPoint);
-  const searchHandler = () =>
-    setCurrentPoint({ lat: "-34.9158592", lng: "-56.1923705" });
-  const markerList = restaurants.map(restaurant => (
-    <RestaurantMarker key={restaurant.id} restaurant={restaurant} />
-  ));
+  useEffect(() => {
+    const getCurrentPosition = () => {
+      if (navigator.geolocation) {
+        debug("Geo location");
+        navigator.geolocation.getCurrentPosition(function(position) {
+          debug("Position", position);
+          setCurrentPoint({
+            lat: `${position.coords.latitude}`,
+            lng: `${position.coords.longitude}`
+          });
+        });
+      }
+    };
+    getCurrentPosition();
+  }, []);
 
   useEffect(() => {
-    const subscription = restaurantsService.restaurantsChanged$.subscribe(
-      (data: Restaurant[]) => setRestaurants(data)
-    );
-
     const params: SearchParams = {
       search: {
         lat: currentPoint.lat,
@@ -34,21 +50,25 @@ const RestaurantMap: React.FC<RestaurantMapProps> = ({
       }
     };
     restaurantsService.getRestaurants(params);
-
-    return function cleanup() {
-      subscription.unsubscribe();
-    };
   }, [currentPoint]);
+
+  const searchHandler = () =>
+    setCurrentPoint({ lat: "-34.9158592", lng: "-56.1923705" });
+  const markerList = restaurants.map(restaurant => (
+    <RestaurantMarker key={restaurant.id} restaurant={restaurant} />
+  ));
 
   return (
     <div className="RestaurantMap">
       <div className="map-container">
         Map placeholder current_point: [{currentPoint.lat}, {currentPoint.lng}]
-        <button id="marker" onClick={searchHandler}>Run Test Search</button>
+        <button id="marker" onClick={searchHandler}>
+          Run Test Search
+        </button>
         {markerList}
       </div>
     </div>
   );
 };
 
-export default RestaurantMap;
+export default React.memo(RestaurantMap);

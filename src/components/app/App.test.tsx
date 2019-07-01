@@ -10,8 +10,4 @@ describe("App", () => {
   it("should render a <div />", () => {
     expect(wrapper.find(".App").length).toEqual(1);
   });
-
-  it("should render a <RestaurantMap />", () => {
-    expect(wrapper.find("RestaurantMap").length).toEqual(1);
-  });
 });

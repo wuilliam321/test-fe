@@ -16,7 +16,7 @@ class RestaurantService {
   > = this.paramsSubject$.asObservable();
 
   getRestaurants(params: SearchParams) {
-    debug("Getting estaurants", params);
+    debug("Getting restaurants", params);
     axios
       .post(this.API_URL + "/searches.json", params, { headers: this.headers })
       .then((res: AxiosResponse<SearchResponse>) => {
@@ -33,7 +33,7 @@ class RestaurantService {
   prepareDataForTeamplate(
     response: AxiosResponse<SearchResponse>
   ): Restaurant[] {
-    return response.data.data;
+    return (response && response.data && response.data.data) || [];
   }
 }
 export default new RestaurantService();

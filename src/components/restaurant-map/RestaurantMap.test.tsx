@@ -9,7 +9,18 @@ describe("RestaurantMap", () => {
 
   beforeAll(() => {
     restaurantMapProps = {
-      restaurants: [],
+      restaurants: [
+        {
+          id: 1,
+          logo: "1",
+          ratingScore: "1",
+          deliveryTimeMaxMinutes: "1",
+          link: "1",
+          name: "1",
+          coordinates: "1",
+          topCategories: "1"
+        }
+      ],
       setRestaurants: jest.fn()
     };
   });
@@ -17,6 +28,10 @@ describe("RestaurantMap", () => {
   beforeEach(
     () => (wrapper = shallow(<RestaurantMap {...restaurantMapProps} />))
   );
+
+  it("should render a <div />", () => {
+    expect(wrapper.find(".RestaurantMap").length).toEqual(1);
+  });
 
   it("should render a <div />", () => {
     expect(wrapper.find(".RestaurantMap").length).toEqual(1);
