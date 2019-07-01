@@ -1,22 +1,27 @@
 import React, { useEffect, useState } from "react";
+import { Subject } from "rxjs";
+import { debounceTime, tap } from "rxjs/operators";
 import restaurantsService from "../../services/restaurant.service";
 import { Coordinate } from "../../shared/interfaces/coordinate";
 import Restaurant from "../../shared/interfaces/restaurant";
 import SearchParams from "../../shared/interfaces/search_params";
 import RestaurantMapProps from "../../shared/props/RestaurantMapProps";
 import { debug } from "../../shared/utils";
-import RestaurantMarker from "../restaurant-marker/RestaurantMarker";
+import MapWithMarker from "./MapWithMarker";
 import "./RestaurantMap.css";
 
 const RestaurantMap: React.FC<RestaurantMapProps> = ({
   restaurants,
   setRestaurants
 }) => {
-  debug("Rendering RestaurantMap Component");
   useEffect(() => {
-    const handleStatusChange = (data: Restaurant[]) => setRestaurants(data);
+    debug("Rendering RestaurantMap Component");
+
     const subscription = restaurantsService.restaurantsChanged$.subscribe(
-      handleStatusChange
+      (data: Restaurant[]) => {
+        debug("Setting restaurants");
+        setRestaurants(data);
+      }
     );
     return function cleanup() {
       subscription.unsubscribe();
@@ -28,9 +33,8 @@ const RestaurantMap: React.FC<RestaurantMapProps> = ({
   useEffect(() => {
     const getCurrentPosition = () => {
       if (navigator.geolocation) {
-        debug("Geo location");
         navigator.geolocation.getCurrentPosition(function(position) {
-          debug("Position", position);
+          debug("Geocolation", position);
           setCurrentPoint({
             lat: `${position.coords.latitude}`,
             lng: `${position.coords.longitude}`
@@ -42,33 +46,62 @@ const RestaurantMap: React.FC<RestaurantMapProps> = ({
   }, []);
 
   useEffect(() => {
-    const params: SearchParams = {
-      search: {
-        lat: currentPoint.lat,
-        lng: currentPoint.lng,
-        country: "1"
-      }
-    };
-    restaurantsService.getRestaurants(params);
+    if (currentPoint.lat !== "0" && currentPoint.lng !== "0") {
+      const params: SearchParams = {
+        search: {
+          lat: currentPoint.lat,
+          lng: currentPoint.lng,
+          country: "1"
+        }
+      };
+      restaurantsService.getRestaurants(params);
+    }
   }, [currentPoint]);
 
-  const searchHandler = () =>
-    setCurrentPoint({ lat: "-34.9158592", lng: "-56.1923705" });
-  const markerList = restaurants.map(restaurant => (
-    <RestaurantMarker key={restaurant.id} restaurant={restaurant} />
-  ));
+  const mapClicked$ = new Subject();
+  useEffect(() => {
+    const subscription = mapClicked$
+      .pipe(
+        tap(() => debug("Point changed!")),
+        debounceTime(500)
+      )
+      .subscribe((point: any) => {
+        setCurrentPoint(point);
+      });
+
+    return function cleanup() {
+      subscription.unsubscribe();
+    };
+  });
+
+  const onClickOnMapHandler = (point: any) => {
+    mapClicked$.next(point);
+  };
 
   return (
     <div className="RestaurantMap">
       <div className="map-container">
-        Map placeholder current_point: [{currentPoint.lat}, {currentPoint.lng}]
-        <button id="marker" onClick={searchHandler}>
+        current_point: [{currentPoint.lat}, {currentPoint.lng}]
+        <button
+          id="marker"
+          onClick={() => {
+            onClickOnMapHandler({ lat: "-34.9156000", lng: "-56.1922000" });
+          }}
+        >
           Run Test Search
         </button>
-        {markerList}
+        <MapWithMarker
+          googleMapURL="https://maps.googleapis.com/maps/api/js?key=<API>&v=3.exp&libraries=geometry,drawing,places"
+          loadingElement={<div style={{ height: `100%` }} />}
+          containerElement={<div style={{ height: `400px` }} />}
+          mapElement={<div style={{ height: `100%` }} />}
+          currentPoint={currentPoint}
+          restaurants={restaurants}
+          searchHandler={onClickOnMapHandler}
+        />
       </div>
     </div>
   );
 };
 
-export default React.memo(RestaurantMap);
+export default RestaurantMap;
