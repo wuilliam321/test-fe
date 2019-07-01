@@ -1,3 +1,7 @@
+.RestaurantMap {
+    padding: 20px
+}
+
 .RestaurantMap .map-container {
     height: 200px;
     width: 100%;

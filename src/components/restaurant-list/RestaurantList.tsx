@@ -11,8 +11,7 @@ const RestaurantList: React.FC<RestaurantListProps> = ({ restaurants }) => {
   ));
   return (
     <div className="RestaurantList">
-      <h1>Restaurants</h1>
-      {restaurantList}
+      {restaurants.length ? restaurantList : 'Click on map to search restaurants'}
     </div>
   );
 };

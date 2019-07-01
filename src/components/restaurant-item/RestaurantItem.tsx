@@ -7,7 +7,29 @@ const RestaurantItem: React.FC<RestaurantItemProps> = ({ restaurant }) => {
   debug("Rendering RestaurantItem Component");
   return (
     <div className="RestaurantItem">
-      <h2>{restaurant.name}</h2>
+      <div className="Restaurant-logo">
+        <img
+          src={`https://d1v73nxuzaqxgd.cloudfront.net/restaurants/${
+            restaurant.logo
+          }`}
+        />
+      </div>
+      <div className="Restaurant-content">
+        <div className="Restaurant-title">
+          <a
+            target={"_blank"}
+            href={`http://www.pedidosya.com.uy/restaurantes/montevideo/${
+              restaurant.link
+            }-menu`}
+          >
+            {`${restaurant.name} - ${restaurant.ratingScore}`}
+          </a>
+        </div>
+        <div className="Restaurant-details">
+          Delivery: {restaurant.deliveryTimeMaxMinutes} minutes
+          {restaurant.topCategories}
+        </div>
+      </div>
     </div>
   );
 };

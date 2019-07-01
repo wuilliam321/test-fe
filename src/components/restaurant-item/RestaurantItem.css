@@ -1,0 +1,21 @@
+.RestaurantItem {
+  padding: 0 10px;
+}
+
+.RestaurantItem:hover {
+  background-color: rgb(182, 182, 182);
+}
+
+.Restaurant-logo,
+.Restaurant-content {
+  display: inline-block;
+}
+
+.Restaurant-logo {
+  padding: 7px 10px 5px 0
+}
+.Restaurant-logo img {
+  width: 48px;
+  height: 48px;
+  display: inline-block;
+}

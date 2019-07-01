@@ -21,8 +21,12 @@ const App: React.FC = () => {
     <div className="App">
       <header className="App-header">
         <h1>Restaurants App</h1>
-        <RestaurantMap {...restaurantMapProps} />
-        <RestaurantList {...restaurantListProps} />
+        <div className="half-size">
+          <RestaurantMap {...restaurantMapProps} />
+        </div>
+        <div className="half-size">
+          <RestaurantList {...restaurantListProps} />
+        </div>
       </header>
     </div>
   );
