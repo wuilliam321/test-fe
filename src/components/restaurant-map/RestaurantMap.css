@@ -3,8 +3,9 @@
 }
 
 .RestaurantMap .map-container {
-    height: 200px;
+    min-height: 400px;
     width: 100%;
     background-color: rgb(170, 170, 170);
     text-align: center;
+    padding: 5px
 }

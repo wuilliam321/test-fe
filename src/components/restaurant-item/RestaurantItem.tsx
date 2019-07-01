@@ -9,6 +9,7 @@ const RestaurantItem: React.FC<RestaurantItemProps> = ({ restaurant }) => {
     <div className="RestaurantItem">
       <div className="Restaurant-logo">
         <img
+          alt={restaurant.name}
           src={`https://d1v73nxuzaqxgd.cloudfront.net/restaurants/${
             restaurant.logo
           }`}
@@ -22,8 +23,9 @@ const RestaurantItem: React.FC<RestaurantItemProps> = ({ restaurant }) => {
               restaurant.link
             }-menu`}
           >
-            {`${restaurant.name} - ${restaurant.ratingScore}`}
+            {restaurant.name}
           </a>
+          <span> ({restaurant.ratingScore} stars)</span>
         </div>
         <div className="Restaurant-details">
           Delivery: {restaurant.deliveryTimeMaxMinutes} minutes

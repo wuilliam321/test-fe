@@ -5,7 +5,7 @@ import { SessionParams } from "../shared/interfaces/session_params";
 import { debug } from "../shared/utils";
 
 class SessionService {
-  private API_URL = "http://localhost:3000";
+  private API_URL = process.env.REACT_APP_API_URL;
   private TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwiZXhwIjoxNTYyMDA1NjgwfQ.xh-sfuEdeOoSnO4iIx-sXYcFjUEF1WZZlR8diJUOy3U";
   // private TOKEN = "";
   private paramsSubject$: Subject<Session> = new Subject();

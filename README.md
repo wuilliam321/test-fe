@@ -1,5 +1,14 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Getting started
+
+First of all, configure `.env.local` file and add
+
+```
+  REACT_APP_API_URL=<SERVER_API>
+  REACT_APP_GOOGLE_MAPS_API_KEY=<GOOGLE_MAP_KEY>
+```
+
 ## Available Scripts
 
 In the project directory, you can run:

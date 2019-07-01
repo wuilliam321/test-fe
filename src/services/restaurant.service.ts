@@ -6,7 +6,7 @@ import { SearchResponse } from "../shared/interfaces/search_response";
 import { debug } from "../shared/utils";
 
 class RestaurantService {
-  private API_URL = "http://localhost:3000";
+  private API_URL = process.env.REACT_APP_API_URL;
   private paramsSubject$: Subject<Restaurant[]> = new Subject();
   private headers = {
     Authorization: localStorage.getItem("token")
@@ -21,9 +21,7 @@ class RestaurantService {
       .post(this.API_URL + "/searches.json", params, { headers: this.headers })
       .then((res: AxiosResponse<SearchResponse>) => {
         debug(res);
-        let data: Restaurant[] = [];
-        data = this.prepareDataForTeamplate(res);
-        this.paramsSubject$.next(data);
+        this.paramsSubject$.next(this.prepareDataForTeamplate(res));
       })
       .catch(err => {
         debug(err);

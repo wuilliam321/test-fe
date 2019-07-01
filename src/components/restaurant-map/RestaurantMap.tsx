@@ -16,16 +16,10 @@ const RestaurantMap: React.FC<RestaurantMapProps> = ({
 }) => {
   useEffect(() => {
     debug("Rendering RestaurantMap Component");
-
-    const subscription = restaurantsService.restaurantsChanged$.subscribe(
-      (data: Restaurant[]) => {
-        debug("Setting restaurants");
-        setRestaurants(data);
-      }
-    );
-    return function cleanup() {
-      subscription.unsubscribe();
-    };
+    restaurantsService.restaurantsChanged$.subscribe((data: Restaurant[]) => {
+      debug("Setting restaurants");
+      setRestaurants(data);
+    });
   }, [setRestaurants]);
 
   const initialMapPoint: Coordinate = { lat: "0", lng: "0" };
@@ -58,9 +52,9 @@ const RestaurantMap: React.FC<RestaurantMapProps> = ({
     }
   }, [currentPoint]);
 
-  const mapClicked$ = new Subject();
+  let mapClicked$ = new Subject();
   useEffect(() => {
-    const subscription = mapClicked$
+    const subs = mapClicked$
       .pipe(
         tap(() => debug("Point changed!")),
         debounceTime(500)
@@ -68,11 +62,20 @@ const RestaurantMap: React.FC<RestaurantMapProps> = ({
       .subscribe((point: any) => {
         setCurrentPoint(point);
       });
-
-    return function cleanup() {
-      subscription.unsubscribe();
+    return () => {
+      subs.unsubscribe();
     };
   });
+
+  const [loading, setLoading] = useState(false);
+  const loadingComponent = <div>Loading...</div>;
+  useEffect(() => {
+    debug("Set loading true on point change");
+    setLoading(true);
+
+    debug("Set loading false on set restaurants");
+    restaurantsService.restaurantsChanged$.subscribe(() => setLoading(false));
+  }, [currentPoint]);
 
   const onClickOnMapHandler = (point: any) => {
     mapClicked$.next(point);
@@ -88,10 +91,12 @@ const RestaurantMap: React.FC<RestaurantMapProps> = ({
             onClickOnMapHandler({ lat: "-34.9156000", lng: "-56.1922000" });
           }}
         >
-          Run Test Search
+          Run Test Search ({loading}) {loading && loadingComponent}
         </button>
         <MapWithMarker
-          googleMapURL="https://maps.googleapis.com/maps/api/js?key=<API>&v=3.exp&libraries=geometry,drawing,places"
+          googleMapURL={`https://maps.googleapis.com/maps/api/js?key=${
+            process.env.REACT_APP_GOOGLE_MAPS_API_KEY
+          }&v=3.exp&libraries=geometry,drawing,places`}
           loadingElement={<div style={{ height: `100%` }} />}
           containerElement={<div style={{ height: `400px` }} />}
           mapElement={<div style={{ height: `100%` }} />}
