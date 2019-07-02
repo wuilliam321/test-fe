@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import Restaurant from "../../shared/interfaces/Restaurant";
 import { LoginProps } from "../../shared/props/LoginProps";
 import RestaurantMapProps from "../../shared/props/RestaurantMapProps";
-import { CurrentUserProps } from "../../shared/props/CurrentUserProps";
 import { debug } from "../../shared/utils";
 import Login from "../login/Login";
 import RestaurantContainer from "../restaurant-container/RestaurantContainer";

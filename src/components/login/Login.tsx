@@ -13,21 +13,24 @@ const Login: React.FC<LoginProps> = ({ setLoggedIn }) => {
   const [formSubmited, setFormSubmited] = useState(false);
 
   useEffect(() => {
-    debug("Rendering Login Component");
-    sessionService.sessionChanged$.subscribe((data: UserInfo) => {
-      debug("Setting session");
-      localStorage.setItem("user_info", JSON.stringify(data));
-      setLoggedIn({ loggedIn: true, userInfo: data });
-    });
+    debug("useEffect Rendering Login Component");
+    if (formSubmited && userForm.email && userForm.password) {
+      debug("useEffect Form changed in some way");
+      sessionService.sessionChanged$.subscribe((data: UserInfo) => {
+        debug("useEffect Setting session");
+        localStorage.setItem("user_info", JSON.stringify(data));
+        setLoggedIn({ loggedIn: true, userInfo: data });
+      });
 
-    const params: SessionParams = {
-      session: {
-        email: userForm.email,
-        password: userForm.password
-      }
-    };
-    formSubmited && sessionService.login(params);
-  }, [formSubmited]);
+      const params: SessionParams = {
+        session: {
+          email: userForm.email,
+          password: userForm.password
+        }
+      };
+      sessionService.login(params);
+    }
+  }, [formSubmited, userForm.email, userForm.password, setLoggedIn]);
 
   const submitHandler = (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
