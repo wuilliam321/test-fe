@@ -31,9 +31,9 @@ const MapWithMarker: React.FC<any> = ({
   return (
     <GoogleMap
       defaultZoom={13}
-      defaultCenter={{
-        lat: -34.901733690594014,
-        lng: -56.164186371121616
+      center={{
+        lat: parseFloat(currentPoint.lat),
+        lng: parseFloat(currentPoint.lng)
       }}
       onClick={setCurrentPointHandler}
     >
