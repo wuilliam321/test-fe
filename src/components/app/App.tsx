@@ -2,11 +2,13 @@ import React, { useEffect, useState } from "react";
 import Restaurant from "../../shared/interfaces/Restaurant";
 import { LoginProps } from "../../shared/props/LoginProps";
 import RestaurantMapProps from "../../shared/props/RestaurantMapProps";
-import { CurrentUserState } from "../../shared/states/CurrentUserState";
+import { CurrentUserProps } from "../../shared/props/CurrentUserProps";
 import { debug } from "../../shared/utils";
 import Login from "../login/Login";
 import RestaurantContainer from "../restaurant-container/RestaurantContainer";
 import "./App.css";
+import Header from "../header/Header";
+import { Session } from "../../shared/interfaces/Session";
 
 const App: React.FC = () => {
   debug("Rendering App Component");
@@ -18,28 +20,34 @@ const App: React.FC = () => {
   };
   const authorizedComponent = <RestaurantContainer {...restaurantMapProps} />;
 
-  const initialUserState: CurrentUserState = { loggedIn: false };
-  const [userState, setUserState] = useState(initialUserState);
+  const initialUser: Session = { loggedIn: false };
+  const [currentUser, setCurrentUser] = useState(initialUser);
   const loginProps: LoginProps = {
-    setLoggedIn: setUserState
+    setLoggedIn: setCurrentUser,
+    currentUser: currentUser
   };
   const loginComponent = <Login {...loginProps} />;
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    const userInfo = JSON.parse(`${localStorage.getItem("user_info")}`);
-    const currentUserStateData: CurrentUserState = {
-      loggedIn: !!token,
-      userInfo: userInfo
-    };
-    token && setUserState(currentUserStateData);
-  }, []);
+    if (token && !currentUser.loggedIn) {
+      debug("Restoring session from local storage");
+      const userInfo = JSON.parse(`${localStorage.getItem("user_info")}`);
+      const loggedInUser: Session = {
+        loggedIn: !!token,
+        userInfo: userInfo
+      };
+      setCurrentUser(loggedInUser);
+    }
+  }, [currentUser.loggedIn]);
 
   return (
     <div className="App">
       <header className="App-header">
-        <h1>Restaurants App</h1>
-        {userState.loggedIn ? authorizedComponent : loginComponent}
+        <Header {...loginProps} />
+        <h2>Restaurants App</h2>
+        <p>Click on the map to search for restaurants</p>
+        {currentUser.loggedIn ? authorizedComponent : loginComponent}
       </header>
     </div>
   );

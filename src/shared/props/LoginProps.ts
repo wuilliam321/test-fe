@@ -1,5 +1,6 @@
-import { CurrentUserState } from "../states/CurrentUserState";
+import { Session } from "../interfaces/Session";
 
 export interface LoginProps {
-  setLoggedIn: (data: CurrentUserState) => void;
+  setLoggedIn: (data: Session) => void;
+  currentUser: Session
 }

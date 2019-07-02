@@ -7,7 +7,7 @@ import Restaurant from "../../shared/interfaces/Restaurant";
 import SearchParams from "../../shared/interfaces/SearchParams";
 import RestaurantMapProps from "../../shared/props/RestaurantMapProps";
 import { debug } from "../../shared/utils";
-import MapWithMarker from "./MapWithMarker";
+import MapWithMarker from "../map-with-marker/MapWithMarker";
 import "./RestaurantMap.css";
 
 const RestaurantMap: React.FC<RestaurantMapProps> = ({
