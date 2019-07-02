@@ -1,9 +1,9 @@
 import axios, { AxiosResponse } from "axios";
 import { Observable, Subject } from "rxjs";
-import { SessionParams } from "../shared/interfaces/session_params";
+import { SessionParams } from "../shared/interfaces/SessionParams";
 import { debug } from "../shared/utils";
-import { SessionResponse } from "../shared/interfaces/session_response";
-import { UserInfo } from "../shared/interfaces/user_info";
+import { SessionResponse } from "../shared/interfaces/SessionResponse";
+import { UserInfo } from "../shared/interfaces/UserInfo";
 
 class SessionService {
   private API_URL = process.env.REACT_APP_API_URL;
@@ -18,7 +18,6 @@ class SessionService {
         debug(res);
         if (res && res.data && res.data.token) {
           localStorage.setItem("token", res.data.token);
-          localStorage.setItem("user_info", JSON.stringify(res.data.user_info));
           this.paramsSubject$.next(res.data.user_info);
         }
       })

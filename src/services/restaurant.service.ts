@@ -1,8 +1,8 @@
 import axios, { AxiosResponse } from "axios";
 import { Observable, Subject } from "rxjs";
-import Restaurant from "../shared/interfaces/restaurant";
-import SearchParams from "../shared/interfaces/search_params";
-import { SearchResponse } from "../shared/interfaces/search_response";
+import Restaurant from "../shared/interfaces/Restaurant";
+import SearchParams from "../shared/interfaces/SearchParams";
+import { SearchResponse } from "../shared/interfaces/SearchResponse";
 import { debug } from "../shared/utils";
 
 class RestaurantService {

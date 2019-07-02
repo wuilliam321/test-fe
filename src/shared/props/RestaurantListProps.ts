@@ -1,4 +1,4 @@
-import Restaurant from "../interfaces/restaurant";
+import Restaurant from "../interfaces/Restaurant";
 
 export default interface RestaurantListProps {
   restaurants: Restaurant[];

@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from "react";
-import Restaurant from "../../shared/interfaces/restaurant";
+import React, { useEffect, useState } from "react";
+import Restaurant from "../../shared/interfaces/Restaurant";
+import { LoginProps } from "../../shared/props/LoginProps";
 import RestaurantMapProps from "../../shared/props/RestaurantMapProps";
+import { CurrentUserState } from "../../shared/states/CurrentUserState";
 import { debug } from "../../shared/utils";
+import Login from "../login/Login";
 import RestaurantContainer from "../restaurant-container/RestaurantContainer";
 import "./App.css";
-import Login from "../login/Login";
-import { LoginProps } from "../../shared/props/LoginProps";
 
 const App: React.FC = () => {
   debug("Rendering App Component");
@@ -17,22 +18,28 @@ const App: React.FC = () => {
   };
   const authorizedComponent = <RestaurantContainer {...restaurantMapProps} />;
 
-  const [loggedIn, setLoggedIn] = useState(false);
+  const initialUserState: CurrentUserState = { loggedIn: false };
+  const [userState, setUserState] = useState(initialUserState);
   const loginProps: LoginProps = {
-    setLoggedIn: setLoggedIn
+    setLoggedIn: setUserState
   };
   const loginComponent = <Login {...loginProps} />;
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    token && setLoggedIn(true);
+    const userInfo = JSON.parse(`${localStorage.getItem("user_info")}`);
+    const currentUserStateData: CurrentUserState = {
+      loggedIn: !!token,
+      userInfo: userInfo
+    };
+    token && setUserState(currentUserStateData);
   }, []);
 
   return (
     <div className="App">
       <header className="App-header">
         <h1>Restaurants App</h1>
-        {loggedIn ? authorizedComponent : loginComponent}
+        {userState.loggedIn ? authorizedComponent : loginComponent}
       </header>
     </div>
   );

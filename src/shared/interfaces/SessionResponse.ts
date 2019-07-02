@@ -1,4 +1,4 @@
-import { UserInfo } from "./user_info";
+import { UserInfo } from "./UserInfo";
 
 export interface SessionResponse {
   token: string;

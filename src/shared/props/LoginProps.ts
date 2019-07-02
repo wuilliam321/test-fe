@@ -1,3 +1,5 @@
+import { CurrentUserState } from "../states/CurrentUserState";
+
 export interface LoginProps {
-    setLoggedIn: (data: boolean) => void;
+  setLoggedIn: (data: CurrentUserState) => void;
 }

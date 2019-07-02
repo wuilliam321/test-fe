@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import sessionService from "../../services/session.service";
-import { SessionParams } from "../../shared/interfaces/session_params";
-import { UserForm } from "../../shared/interfaces/user_form";
-import { UserInfo } from "../../shared/interfaces/user_info";
+import { SessionParams } from "../../shared/interfaces/SessionParams";
+import { UserForm } from "../../shared/interfaces/UserForm";
+import { UserInfo } from "../../shared/interfaces/UserInfo";
 import { LoginProps } from "../../shared/props/LoginProps";
 import { debug } from "../../shared/utils";
 import "./Login.css";
@@ -16,7 +16,8 @@ const Login: React.FC<LoginProps> = ({ setLoggedIn }) => {
     debug("Rendering Login Component");
     sessionService.sessionChanged$.subscribe((data: UserInfo) => {
       debug("Setting session");
-      setLoggedIn(true);
+      localStorage.setItem("user_info", JSON.stringify(data));
+      setLoggedIn({ loggedIn: true, userInfo: data });
     });
 
     const params: SessionParams = {

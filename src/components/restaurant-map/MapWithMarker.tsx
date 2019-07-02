@@ -5,7 +5,7 @@ import {
   Marker
 } from "react-google-maps";
 import React from "react";
-import Restaurant from "../../shared/interfaces/restaurant";
+import Restaurant from "../../shared/interfaces/Restaurant";
 import { debug } from "../../shared/utils";
 
 const MapWithMarker: React.FC<any> = ({
