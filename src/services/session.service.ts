@@ -1,39 +1,30 @@
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import { Observable, Subject } from "rxjs";
-import { Session } from "../shared/interfaces/session";
 import { SessionParams } from "../shared/interfaces/session_params";
 import { debug } from "../shared/utils";
+import { SessionResponse } from "../shared/interfaces/session_response";
+import { UserInfo } from "../shared/interfaces/user_info";
 
 class SessionService {
   private API_URL = process.env.REACT_APP_API_URL;
-  private TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwiZXhwIjoxNTYyMDA1NjgwfQ.xh-sfuEdeOoSnO4iIx-sXYcFjUEF1WZZlR8diJUOy3U";
-  // private TOKEN = "";
-  private paramsSubject$: Subject<Session> = new Subject();
-  private headers = {
-    Authorization: localStorage.getItem('token')
-  };
-  sessionChanged$: Observable<Session> = this.paramsSubject$.asObservable();
+  private paramsSubject$: Subject<UserInfo> = new Subject();
+  sessionChanged$: Observable<UserInfo> = this.paramsSubject$.asObservable();
 
   login(params: SessionParams) {
-    debug("Doing login", params);
-    const data: Session = {
-      email: "a@a.com",
-      token: "123",
-      name: "Test",
-      country: "1"
-    };
-    localStorage.setItem("token", this.TOKEN);
-    this.paramsSubject$.next(data);
-
-    // axios
-    //   .post(this.API_URL + "/login.json", params, { headers: this.headers })
-    //   .then(res => {
-    //     debug(res);
-    //     this.paramsSubject$.next(data);
-    //   })
-    //   .catch(err => {
-    //     debug(err);
-    //   });
+    debug("Trying to login", params);
+    axios
+      .post(this.API_URL + "/login.json", params)
+      .then((res: AxiosResponse<SessionResponse>) => {
+        debug(res);
+        if (res && res.data && res.data.token) {
+          localStorage.setItem("token", res.data.token);
+          localStorage.setItem("user_info", JSON.stringify(res.data.user_info));
+          this.paramsSubject$.next(res.data.user_info);
+        }
+      })
+      .catch(err => {
+        debug(err);
+      });
   }
 }
 export default new SessionService();

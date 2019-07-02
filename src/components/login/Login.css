@@ -1,0 +1,24 @@
+.Login .Login-container {
+    width: 200px;
+    margin: auto;
+    min-height: 150px;
+    background-color: rgb(212, 212, 212);
+    padding: 20px;
+}
+.Login form label,
+.Login form input {
+    display: block;
+    width: 100%;
+}
+
+.Login form label {
+    padding-top: 20px;
+}
+
+.Login form button[type=submit] {
+    margin: 20px 0;
+}
+
+.Login form .actions {
+    text-align: center;
+}
