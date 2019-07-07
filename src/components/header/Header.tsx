@@ -1,7 +1,7 @@
 import React from "react";
+import { LoginProps } from "../../shared/props/LoginProps";
 import { debug } from "../../shared/utils";
 import "./Header.css";
-import { LoginProps } from "../../shared/props/LoginProps";
 
 const Header: React.FC<LoginProps> = ({ setLoggedIn, currentUser }) => {
   debug("Rendering Header Component");
@@ -16,14 +16,17 @@ const Header: React.FC<LoginProps> = ({ setLoggedIn, currentUser }) => {
     localStorage.clear();
     setLoggedIn({ loggedIn: false, userInfo: undefined });
   };
+
+  const logoutButton = (
+    <button type="button" onClick={handleLogout}>
+      Logout
+    </button>
+  );
+
   return (
     <div className="Header">
       Welcome <strong>{userName}</strong>
-      {currentUser.loggedIn && (
-        <button type="button" onClick={handleLogout}>
-          Logout
-        </button>
-      )}
+      {currentUser.loggedIn && logoutButton}
     </div>
   );
 };

@@ -15,9 +15,7 @@ const Login: React.FC<LoginProps> = ({ setLoggedIn }) => {
   useEffect(() => {
     debug("useEffect Rendering Login Component");
     if (formSubmited && userForm.email && userForm.password) {
-      debug("useEffect Form changed in some way");
       sessionService.sessionChanged$.subscribe((data: UserInfo) => {
-        debug("useEffect Setting session");
         localStorage.setItem("user_info", JSON.stringify(data));
         setLoggedIn({ loggedIn: true, userInfo: data });
       });

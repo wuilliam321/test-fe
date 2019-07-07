@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Subject } from "rxjs";
-import { debounceTime, tap } from "rxjs/operators";
+import { debounceTime } from "rxjs/operators";
 import restaurantsService from "../../services/restaurant.service";
 import { Coordinate } from "../../shared/interfaces/Corrdinate";
 import Restaurant from "../../shared/interfaces/Restaurant";
 import SearchParams from "../../shared/interfaces/SearchParams";
+import { MapWithMarkerProps } from "../../shared/props/MapWithMarkerProps";
 import RestaurantMapProps from "../../shared/props/RestaurantMapProps";
 import { debug } from "../../shared/utils";
 import MapWithMarker from "../map-with-marker/MapWithMarker";
@@ -12,23 +13,26 @@ import "./RestaurantMap.css";
 
 const RestaurantMap: React.FC<RestaurantMapProps> = ({
   restaurants,
-  setRestaurants
+  setRestaurants,
+  loading,
+  setLoading
 }) => {
+  debug("Rendering RestaurantMap Component");
+
   useEffect(() => {
-    debug("Rendering RestaurantMap Component");
-    restaurantsService.restaurantsChanged$.subscribe((data: Restaurant[]) => {
-      debug("Setting restaurants");
-      setRestaurants(data);
-    });
-  }, [setRestaurants]);
+    const subs = restaurantsService.restaurantsChanged$.subscribe(
+      (data: Restaurant[]) => setRestaurants(data)
+    );
+    return () => subs.unsubscribe();
+  });
 
   const initialMapPoint: Coordinate = { lat: "0", lng: "0" };
   const [currentPoint, setCurrentPoint] = useState(initialMapPoint);
   useEffect(() => {
     const getCurrentPosition = () => {
-      if (navigator.geolocation) {
+      if (navigator && navigator.geolocation) {
+        debug("Getting Geolocation Coordinates");
         navigator.geolocation.getCurrentPosition(function(position) {
-          debug("Geocolation", position);
           setCurrentPoint({
             lat: `${position.coords.latitude}`,
             lng: `${position.coords.longitude}`
@@ -41,6 +45,7 @@ const RestaurantMap: React.FC<RestaurantMapProps> = ({
 
   useEffect(() => {
     if (currentPoint.lat !== "0" && currentPoint.lng !== "0") {
+      debug("Trying getting restaurants on currentPosition changed");
       const params: SearchParams = {
         search: {
           lat: currentPoint.lat,
@@ -52,14 +57,12 @@ const RestaurantMap: React.FC<RestaurantMapProps> = ({
     }
   }, [currentPoint]);
 
-  let mapClicked$ = new Subject();
+  const mapClicked$: Subject<Coordinate> = new Subject();
   useEffect(() => {
     const subs = mapClicked$
-      .pipe(
-        tap(() => debug("Point changed!")),
-        debounceTime(500)
-      )
-      .subscribe((point: any) => {
+      .pipe(debounceTime(500))
+      .subscribe((point: Coordinate) => {
+        setLoading(true);
         setCurrentPoint(point);
       });
     return () => {
@@ -67,31 +70,31 @@ const RestaurantMap: React.FC<RestaurantMapProps> = ({
     };
   });
 
-  const [loading, setLoading] = useState(false);
-  const loadingComponent = <div>Loading...</div>;
-  useEffect(() => {
-    debug("Set loading true on point change");
-    setLoading(true);
-
-    debug("Set loading false on set restaurants");
-    restaurantsService.restaurantsChanged$.subscribe(() => setLoading(false));
-  }, [currentPoint]);
-
-  const onClickOnMapHandler = (point: any) => {
+  const onClickOnMapHandler = (point: Coordinate) => {
     mapClicked$.next(point);
+  };
+
+  const loadingComponent = <div>Loading...</div>;
+
+  const mapWithMarkerProps: MapWithMarkerProps = {
+    currentPoint,
+    restaurants,
+    searchHandler: onClickOnMapHandler
   };
 
   return (
     <div className="RestaurantMap">
+      {loading && loadingComponent}
+
       <div className="map-container">
         current_point: [{currentPoint.lat}, {currentPoint.lng}]
         <button
           id="marker"
-          onClick={() => {
-            onClickOnMapHandler({ lat: "-34.9156000", lng: "-56.1922000" });
-          }}
+          onClick={() =>
+            onClickOnMapHandler({ lat: "-34.9156000", lng: "-56.1922000" })
+          }
         >
-          Run Test Search ({loading}) {loading && loadingComponent}
+          Run Test Search
         </button>
         <MapWithMarker
           googleMapURL={`https://maps.googleapis.com/maps/api/js?key=${
@@ -100,9 +103,7 @@ const RestaurantMap: React.FC<RestaurantMapProps> = ({
           loadingElement={<div style={{ height: `100%` }} />}
           containerElement={<div style={{ height: `400px` }} />}
           mapElement={<div style={{ height: `100%` }} />}
-          currentPoint={currentPoint}
-          restaurants={restaurants}
-          searchHandler={onClickOnMapHandler}
+          {...mapWithMarkerProps}
         />
       </div>
     </div>
